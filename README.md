@@ -1,10 +1,16 @@
 # Amplifier
 
+<img src="docs/brand/logo.svg" width="96" height="96" alt="Amplifier logo: three ascending audio bars" />
+
 A small native Kotlin background volume booster for Android 8.0+ (API 26), targeting Android 16 (API 36). Designed for trying the standard AOSP audio effect framework on LegionOS. No root, audio recording, Internet permission, account, or analytics.
 
 The default boost is **+6 dB**, approximately **2× signal amplitude**, with a slider from 0 to +15 dB in 0.5 dB steps. This does not mean twice the perceived loudness. Android’s `LoudnessEnhancer` compresses signals that would exceed the supported sample range, so the actual increase depends on the content.
 
 ## Install without Android Studio
+
+For the published app, open [GitHub Releases](https://github.com/Srimi1/Amplifier/releases/latest), download `amplifier-1.0.0.apk` from **Assets**, and open it on your phone. Allow installation from that browser/file manager when Android asks. Release APKs are signed with the app’s private release key and have debugging disabled.
+
+For a development build:
 
 1. Open this repository’s **Actions** tab and select a successful **Build APK** run for your branch.
 2. Under **Artifacts**, download **amplifier-debug-apk**. GitHub may require you to sign in.
@@ -12,9 +18,11 @@ The default boost is **+6 dB**, approximately **2× signal amplitude**, with a s
 4. Open the APK and allow installation from that browser/file manager when Android asks.
 5. Open **Amplifier**, enable boost, allow notifications, and optionally allow unrestricted background use. Start at +6 dB.
 
-The notification shows the current gain. **Pause boost / Resume boost** provides a quick comparison while keeping the service ready; **Stop** turns it off and removes the notification. The main switch also stops the service. Gain, global-mode choice, enabled state, and pause state survive restarts. If enabled, Amplifier attempts to restart after reboot (once the phone is unlocked) and after an app update.
+The notification shows the current gain. **Pause boost / Resume boost** provides a quick comparison while keeping the service ready; **Stop** turns it off and removes the notification. The main switch also stops the service. Gain, global-mode choice, enabled state, and pause state survive restarts. If enabled, Amplifier attempts to restart after reboot (once the phone is unlocked) and after an app update. The launcher, notification, app header, and interface use a minimal black-and-white design; [logo sources](docs/brand/) are included.
 
-All debug builds use the same **public development signing key** in `gradle/debug.keystore`, allowing later APKs to install as updates. Its alias is `androiddebugkey` and both passwords are `android`. This is a test key, not a secret or a production signing identity. If you installed a differently signed build, uninstall it before installing this one.
+Debug builds use the app ID `dev.legion.amplifier.debug`, separate from the release app ID `dev.legion.amplifier`. Enable only one of them to avoid competing audio effects. All debug builds use the same **public development signing key** in `gradle/debug.keystore`, allowing later debug APKs to install as updates. Its alias is `androiddebugkey` and both passwords are `android`. This is a test key, not a secret or a production signing identity.
+
+If you installed the initial development APK that used `dev.legion.amplifier` with the debug key, uninstall it before installing the signed release; Android will reject an update with a different signature. Later releases must keep the original private release key to update existing installs.
 
 ## Why YouTube can sound quieter than Reels
 
@@ -53,10 +61,21 @@ sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
 sdkmanager --licenses
 # Set ANDROID_HOME to the SDK directory, or create local.properties with sdk.dir=...
 ./gradlew assembleDebug
-./gradlew testDebugUnitTest lint
+./gradlew testDebugUnitTest lint lintRelease
 ```
 
-APK: `app/build/outputs/apk/debug/app-debug.apk`. Code and resource lint warnings fail the build; online tool-update notices are excluded because versions are pinned. Every push and pull request builds the APK, runs the routing/lifetime unit tests and lint, and uploads the APK and validation reports. APK artifacts expire after 30 days; rerun the workflow to regenerate one.
+Debug APK: `app/build/outputs/apk/debug/app-debug.apk`. Code and resource lint warnings fail the build; online tool-update notices are excluded because versions are pinned. Every push and pull request builds the debug APK, runs the routing/lifetime unit tests and debug/release lint, and uploads the APK and validation reports. APK artifacts expire after 30 days; rerun the workflow to regenerate one. Published release assets remain available on GitHub Releases.
+
+### Signed release build
+
+Copy `release-signing.properties.example` to `release-signing.properties` and supply the path, alias, and passwords for your private release keystore. The real signing properties and private keystores are excluded from Git. Preserve the original release key and credentials in a secure backup for future app updates.
+
+```sh
+./gradlew assembleRelease
+apksigner verify --verbose app/build/outputs/apk/release/app-release.apk
+```
+
+With signing configured, the release APK is `app/build/outputs/apk/release/app-release.apk` and has debugging disabled. Without signing properties, Gradle produces an unsigned release APK that cannot be installed. CI publishes development APKs without access to the private release key; signed GitHub releases are built and verified separately.
 
 ## Verify on LegionOS / Android 16
 

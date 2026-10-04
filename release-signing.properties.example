@@ -1,0 +1,6 @@
+# Copy to release-signing.properties, which is excluded from Git.
+# Preserve the original private signing key to update existing release installs.
+storeFile=/absolute/path/to/amplifier-release.p12
+storePassword=your-private-password
+keyAlias=amplifier-release
+keyPassword=your-private-password

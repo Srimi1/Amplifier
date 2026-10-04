@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Amplifier</string>
+    <string name="logo_description">Amplifier logo: three ascending audio bars</string>
     <string name="app_subtitle">Background volume booster</string>
     <string name="boost_media">Enable boost</string>
     <string name="gain_title">Choose your boost</string>

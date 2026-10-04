@@ -6,4 +6,6 @@ local.properties
 .idea/
 *.jks
 *.keystore
+*.p12
+release-signing.properties
 !gradle/debug.keystore

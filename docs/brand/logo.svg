@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 108 108" role="img" aria-labelledby="title">
+  <title id="title">Amplifier</title>
+  <rect width="108" height="108" fill="#000000"/>
+  <g fill="#FFFFFF">
+    <rect x="31" y="52" width="11" height="24" rx="5.5"/>
+    <rect x="48.5" y="41" width="11" height="35" rx="5.5"/>
+    <rect x="66" y="30" width="11" height="46" rx="5.5"/>
+  </g>
+</svg>

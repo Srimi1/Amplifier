@@ -11,10 +11,17 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/icon_background"
+            android:contentDescription="@string/logo_description"
+            android:src="@drawable/ic_launcher_foreground" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:text="@string/app_name"
             android:textColor="@color/text_primary"
             android:textSize="34sp"
