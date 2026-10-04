@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/app_name"
+            android:textColor="@color/text_primary"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+        <TextView style="@style/BodyText" android:text="@string/app_subtitle" />
+
+        <LinearLayout style="@style/Card">
+            <Switch
+                android:id="@+id/enabled_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/boost_media"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/service_status"
+                style="@style/BodyText"
+                android:layout_marginTop="12dp"
+                android:accessibilityLiveRegion="polite"
+                android:background="@drawable/status_background"
+                android:padding="12dp"
+                android:text="@string/status_off"
+                android:textColor="@color/accent" />
+            <Button android:id="@+id/pause_button" style="@style/ActionButton" android:text="@string/pause_boost" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Card">
+            <TextView style="@style/CardTitle" android:text="@string/gain_title" />
+            <TextView
+                android:id="@+id/gain_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/accent"
+                android:textSize="46sp"
+                android:textStyle="bold" />
+            <TextView android:id="@+id/gain_factor" style="@style/BodyText" />
+            <SeekBar
+                android:id="@+id/gain_slider"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:max="30"
+                android:progress="12" />
+            <FrameLayout
+                android:id="@+id/gain_markers"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="start" android:text="@string/gain_zero"
+                    android:textColor="@color/text_secondary" android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/double_marker"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:gravity="center" android:text="@string/gain_double"
+                    android:textColor="@color/accent" android:textSize="12sp" android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="end" android:text="@string/gain_max"
+                    android:textColor="@color/text_secondary" android:textSize="12sp" />
+            </FrameLayout>
+            <TextView style="@style/BodyText" android:text="@string/gain_help" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Card">
+            <Switch
+                android:id="@+id/global_switch"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:minHeight="48dp" android:text="@string/global_switch"
+                android:textSize="18sp" android:textStyle="bold" />
+            <TextView style="@style/BodyText" android:text="@string/global_help" />
+            <TextView android:id="@+id/global_status" style="@style/BodyText" android:layout_marginTop="16dp" android:textColor="@color/text_primary" />
+            <TextView android:id="@+id/session_status" style="@style/BodyText" android:textColor="@color/text_primary" />
+            <TextView android:id="@+id/effect_issues" style="@style/BodyText" android:layout_marginTop="8dp" android:visibility="gone" />
+            <TextView style="@style/BodyText" android:layout_marginTop="12dp" android:text="@string/session_help" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Card">
+            <TextView style="@style/CardTitle" android:text="@string/background_title" />
+            <TextView android:id="@+id/battery_status" style="@style/BodyText" android:layout_marginTop="12dp" />
+            <Button android:id="@+id/battery_button" style="@style/ActionButton" android:text="@string/battery_button" />
+            <TextView android:id="@+id/notification_status" style="@style/BodyText" />
+            <Button android:id="@+id/notification_button" style="@style/ActionButton" android:text="@string/notification_button" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Card" android:layout_marginBottom="12dp">
+            <TextView style="@style/CardTitle" android:text="@string/youtube_tip" />
+            <TextView style="@style/BodyText" android:layout_marginTop="8dp" android:text="@string/youtube_help" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
