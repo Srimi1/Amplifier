@@ -40,6 +40,9 @@ print(max(runtimes, key=lambda r: tuple(map(int, r["version"].split("."))))["ide
     -derivedDataPath build/ios -resultBundlePath build/ios-tests.xcresult \
     -parallel-testing-enabled NO test-without-building CODE_SIGNING_ALLOWED=NO
   xcrun xcresulttool get test-results summary --path build/ios-tests.xcresult > build/ios-artifacts/test-summary.json
+  # Xcode may shut down the destination after test-without-building completes.
+  # Boot it again before launching the app for the delivery screenshot.
+  xcrun simctl bootstatus "$ios_simulator_id" -b
   xcrun simctl launch --terminate-running-process "$ios_simulator_id" com.srimi1.amplifier
   xcrun simctl io "$ios_simulator_id" screenshot build/ios-artifacts/iPhone-17.png
 fi
