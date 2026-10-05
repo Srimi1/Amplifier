@@ -4,6 +4,8 @@
 
 A small native Kotlin background volume booster for Android 8.0+ (API 26), targeting Android 16 (API 36). Designed for trying the standard AOSP audio effect framework on LegionOS. No root, audio recording, Internet permission, account, or analytics.
 
+An [iPhone version built with Xcode](ios/README.md) is also included for iOS 26+, including iPhone 17. **Its gain applies only to imported media played inside Amplifier.** iOS does not allow this app to amplify YouTube, Chrome, or other apps. The Android APK cannot run on an iPhone; the iOS project has separate builds and Apple signing requirements.
+
 The default boost is **+6 dB**, approximately **2× signal amplitude**, with a slider from 0 to +15 dB in 0.5 dB steps. This does not mean twice the perceived loudness. Android’s `LoudnessEnhancer` compresses signals that would exceed the supported sample range, so the actual increase depends on the content.
 
 ## Install without Android Studio

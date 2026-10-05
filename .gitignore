@@ -9,3 +9,11 @@ local.properties
 *.p12
 release-signing.properties
 !gradle/debug.keystore
+DerivedData/
+**/xcuserdata/
+*.xcuserstate
+*.xcarchive/
+*.ipa
+*.mobileprovision
+*.p8
+*.pfx
