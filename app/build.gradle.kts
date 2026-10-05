@@ -62,6 +62,8 @@ android {
         warningsAsErrors = true
         // Tool versions are pinned; online update notices must not break repeatable builds.
         disable += "AndroidGradlePluginVersion"
+        // Android 16 / API 36 is the intended release target, even after newer SDKs ship.
+        disable += "OldTargetApi"
     }
 }
 

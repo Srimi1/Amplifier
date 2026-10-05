@@ -64,7 +64,7 @@ sdkmanager --licenses
 ./gradlew testDebugUnitTest lint lintRelease
 ```
 
-Debug APK: `app/build/outputs/apk/debug/app-debug.apk`. Code and resource lint warnings fail the build; online tool-update notices are excluded because versions are pinned. Every push and pull request builds the debug APK, runs the routing/lifetime unit tests and debug/release lint, and uploads the APK and validation reports. APK artifacts expire after 30 days; rerun the workflow to regenerate one. Published release assets remain available on GitHub Releases.
+Debug APK: `app/build/outputs/apk/debug/app-debug.apk`. Code and resource lint warnings fail the build; upgrade notices for pinned tools and the intentional Android 16 target are excluded. Every push and pull request builds the debug APK, runs the routing/lifetime unit tests and debug/release lint, and uploads the APK and validation reports. APK artifacts expire after 30 days; rerun the workflow to regenerate one. Published release assets remain available on GitHub Releases.
 
 ### Signed release build
 
