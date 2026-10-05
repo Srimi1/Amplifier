@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 struct AmplifierApp: App {
     @State private var playback: MediaPlayback
+    @State private var restoration: Task<Void, Never>?
 
     init() {
         if ProcessInfo.processInfo.arguments.contains("-ui-testing") {
@@ -20,12 +21,25 @@ struct AmplifierApp: App {
         WindowGroup {
             AmplifierView(playback: playback)
                 .preferredColorScheme(.dark)
-                .task {
-                    if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-                        await playback.restore()
+                .task { await restoreBeforeOpeningFiles() }
+                .onOpenURL { url in
+                    Task {
+                        await restoreBeforeOpeningFiles()
+                        await playback.importFile(url)
                     }
                 }
-                .onOpenURL { url in Task { await playback.importFile(url) } }
         }
+    }
+
+    private func restoreBeforeOpeningFiles() async {
+        guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
+        if let restoration {
+            await restoration.value
+            return
+        }
+        let model = playback
+        let task = Task { await model.restore() }
+        restoration = task
+        await task.value
     }
 }

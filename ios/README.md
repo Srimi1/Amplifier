@@ -17,6 +17,8 @@ Files are copied into the app's private storage. **Remove** deletes only that im
 
 ## Open and run in Xcode
 
+The [iPhone Xcode preview](https://github.com/Srimi1/Amplifier/releases/tag/ios-v1.0.0-preview.1) provides the source project, simulator app, unsigned device archive, and validation reports. Use the source ZIP to run or sign the app with your own Apple team.
+
 1. On a Mac with Xcode 26, clone this repository and switch to `codex/ios-iphone-17`, or download the iOS source artifact from a successful **Build iPhone app** Actions run.
 2. Open `ios/Amplifier.xcodeproj` and choose the shared **Amplifier** scheme.
 3. Select the **iPhone 17** simulator and press Run. No Apple developer membership is needed for simulator use.
