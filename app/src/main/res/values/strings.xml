@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Amplifier</string>
+    <string name="logo_description">Amplifier logo: three ascending audio bars</string>
+    <string name="app_subtitle">Background volume booster</string>
+    <string name="boost_media">Enable boost</string>
+    <string name="gain_title">Choose your boost</string>
+    <string name="gain_value">+%1$.1f dB</string>
+    <string name="gain_factor">≈ %1$.2f× signal amplitude</string>
+    <string name="gain_accessibility">Audio boost, %1$s</string>
+    <string name="gain_zero">0 dB</string>
+    <string name="gain_double">+6 dB\n≈2×</string>
+    <string name="gain_max">+15 dB</string>
+    <string name="gain_help">Start at +6 dB. Reduce the boost if loud audio becomes distorted. The limiter may reduce the actual gain.</string>
+    <string name="status_off">Boost is off</string>
+    <string name="status_starting">Starting boost…</string>
+    <string name="status_paused">Boost paused. Resume to hear the difference.</string>
+    <string name="status_global_active">Global effect is active. Check the sound in your player.</string>
+    <string name="status_sessions_active">Boosting announced app sessions</string>
+    <string name="status_waiting">Waiting for a supported player. Restart playback to announce a session.</string>
+    <string name="status_start_failed">Android prevented startup. Enable boost again from this screen.</string>
+    <string name="global_switch">Use global mix</string>
+    <string name="global_help">Covers players such as Chrome when supported by your ROM. It may affect other audio on the same mix. Turn this off to test session mode. Only one boost stage is used.</string>
+    <string name="global_status">Global mix: %1$s</string>
+    <string name="global_idle">not attached</string>
+    <string name="global_active">attached and enabled</string>
+    <string name="global_off">disabled in settings</string>
+    <string name="global_paused">paused</string>
+    <string name="global_conflict">another app has control</string>
+    <string name="global_unavailable">unavailable on this audio route</string>
+    <string name="session_status">App sessions · boosted: %1$d · announced: %2$d</string>
+    <string name="session_help">Session count stays at zero for players that do not announce sessions. Global mix can still boost their audio.</string>
+    <plurals name="failed_sessions">
+        <item quantity="one">%1$d announced session could not be configured.</item>
+        <item quantity="other">%1$d announced sessions could not be configured.</item>
+    </plurals>
+    <string name="effect_conflict">Another effect app has control. Try disabling other equalizers.</string>
+    <string name="session_limit">Session limit reached. Restart Amplifier to clear stale sessions.</string>
+    <string name="pause_boost">Pause boost</string>
+    <string name="resume_boost">Resume boost</string>
+    <string name="stop_boost">Stop</string>
+    <string name="background_title">Keep it running</string>
+    <string name="battery_unrestricted">Battery: unrestricted background use</string>
+    <string name="battery_optimized">Battery: optimized — Android may stop boost</string>
+    <string name="battery_button">Background settings</string>
+    <string name="battery_dialog_title">Allow background use?</string>
+    <string name="battery_dialog_message">Exempt Amplifier from battery optimization to help keep audio boost running after you leave the app. Android will ask for your permission.</string>
+    <string name="battery_allow">Continue</string>
+    <string name="not_now">Not now</string>
+    <string name="notifications_allowed">Notifications: allowed</string>
+    <string name="notifications_blocked">Notifications: blocked — allow them for quick boost controls</string>
+    <string name="notification_button">Notification settings</string>
+    <string name="youtube_tip">YouTube tip</string>
+    <string name="youtube_help">In the video settings, try turning off “Stable volume”. Reels are often mastered louder than streaming videos.</string>
+    <string name="channel_name">Audio boost</string>
+    <string name="channel_description">Current boost and background audio controls</string>
+    <string name="notification_active">+%1$.1f dB · %2$s</string>
+    <string name="notification_paused">Paused · +%1$.1f dB ready</string>
+    <string name="notification_global">global mix active</string>
+    <plurals name="notification_sessions">
+        <item quantity="one">%1$d app session boosted</item>
+        <item quantity="other">%1$d app sessions boosted</item>
+    </plurals>
+</resources>

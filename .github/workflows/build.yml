@@ -1,0 +1,53 @@
+name: Build APK
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
+      - name: Install Android 16 build packages
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Set up Gradle and validate wrapper
+        uses: gradle/actions/setup-gradle@v4
+      - name: Build, test, and lint
+        run: ./gradlew --no-daemon assembleDebug testDebugUnitTest lint lintRelease
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: amplifier-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload validation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-reports
+          path: |
+            app/build/reports/lint-results-*
+            app/build/reports/tests/
+          if-no-files-found: ignore
+          retention-days: 14
