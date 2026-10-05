@@ -1,0 +1,56 @@
+name: Build iPhone app
+
+on:
+  push:
+    paths: ['ios/**', '.github/workflows/build-ios.yml']
+  pull_request:
+    paths: ['ios/**', '.github/workflows/build-ios.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  xcode:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - name: Select Xcode 26.3
+        run: sudo xcode-select --switch /Applications/Xcode_26.3.app/Contents/Developer
+      - name: Test the audio processor with sanitizers
+        run: ./ios/scripts/test-dsp.sh
+      - name: Build and test on iPhone 17
+        run: ./ios/scripts/build-and-test.sh
+      - name: Upload the simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: amplifier-ios-simulator
+          path: build/ios-artifacts/amplifier-ios-simulator.zip
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload the unsigned device archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: amplifier-ios-device-unsigned
+          path: build/ios-artifacts/amplifier-ios-device-unsigned.zip
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload Xcode source and validation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amplifier-ios-validation
+          path: |
+            build/ios-artifacts/amplifier-ios-source.zip
+            build/ios-artifacts/test-summary.json
+            build/ios-artifacts/iPhone-17.png
+            build/ios-artifacts/BUILDINFO.json
+            build/ios-logs/
+            build/ios-tests.xcresult/
+          if-no-files-found: ignore
+          retention-days: 14
