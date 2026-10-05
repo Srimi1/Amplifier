@@ -24,8 +24,12 @@ jobs:
         run: sudo xcode-select --switch /Applications/Xcode_26.3.app/Contents/Developer
       - name: Test the audio processor with sanitizers
         run: ./ios/scripts/test-dsp.sh
-      - name: Build and test on iPhone 17
-        run: ./ios/scripts/build-and-test.sh
+      - name: Compile the app and tests with Xcode
+        run: ./ios/scripts/build-and-test.sh compile
+      - name: Run tests on iPhone 17
+        run: ./ios/scripts/build-and-test.sh test
+      - name: Archive simulator and device builds
+        run: ./ios/scripts/build-and-test.sh archive
       - name: Upload the simulator app
         uses: actions/upload-artifact@v4
         with:
