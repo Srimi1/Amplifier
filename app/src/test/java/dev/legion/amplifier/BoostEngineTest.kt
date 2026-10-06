@@ -160,6 +160,20 @@ class BoostEngineTest {
         assertEquals(0, f.engine.closeSession(42).knownSessions)
     }
 
+    @Test fun playerHandoffUsesSelectedGainWithoutGlobalMixAndSurvivesPause() {
+        val f = Fixture()
+        f.engine.configure(Gain.FOUR_TIMES_MB, useGlobal = false, paused = false)
+        val status = f.engine.openSession(73)
+        assertEquals(setOf(73), f.effects.keys)
+        assertEquals(1, status.boostedSessions)
+        assertEquals(1200, f.effects.getValue(73).appliedGain)
+        f.engine.configure(600, useGlobal = false, paused = true)
+        f.engine.openSession(74)
+        assertTrue(f.effects.values.none { it.enabled })
+        f.engine.configure(600, useGlobal = false, paused = false)
+        assertTrue(f.effects.values.all { it.enabled && it.appliedGain == 600 })
+    }
+
     @Test fun gainIsClampedAndSixDecibelsIsApproximatelyDoubleAmplitude() {
         val f = Fixture()
         f.engine.configure(Int.MAX_VALUE, useGlobal = true, paused = false)

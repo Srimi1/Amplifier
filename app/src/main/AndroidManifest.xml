@@ -21,6 +21,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Players can pass their current session through the Equalizer menu. -->
+            <intent-filter>
+                <action android:name="android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <service
@@ -29,7 +34,7 @@
             android:foregroundServiceType="specialUse">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="User-enabled continuous audio gain through LoudnessEnhancer on the output mix and announced playback sessions; no recording or media playback." />
+                android:value="User-enabled continuous audio gain through LoudnessEnhancer on the output mix and connected playback sessions; no recording or media playback." />
         </service>
 
         <receiver android:name=".BootReceiver" android:exported="false">
