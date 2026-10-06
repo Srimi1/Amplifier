@@ -100,6 +100,11 @@ class BoostService : Service() {
             receiverRegistered = true
         }
         applySettings()
+        // The user may have opened Amplifier from a player's Equalizer menu.
+        // Configure gain/pause/global mode first so attaching never adds an
+        // unintended initial boost or a second gain stage.
+        val playerSession = intent?.getIntExtra(EXTRA_PLAYER_SESSION, -1) ?: -1
+        if (playerSession > 0) updateStatus(engine.openSession(playerSession))
         return START_STICKY
     }
 
@@ -199,11 +204,14 @@ class BoostService : Service() {
         private const val ACTION_START = "dev.legion.amplifier.START"
         private const val ACTION_TOGGLE = "dev.legion.amplifier.TOGGLE"
         private const val ACTION_STOP = "dev.legion.amplifier.STOP"
+        private const val EXTRA_PLAYER_SESSION = "dev.legion.amplifier.PLAYER_SESSION"
         private const val PENDING_FLAGS = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         private var activeService = WeakReference<BoostService>(null)
 
-        fun start(context: Context) {
-            context.startForegroundService(Intent(context, BoostService::class.java).setAction(ACTION_START))
+        fun start(context: Context, playerSession: Int? = null) {
+            val intent = Intent(context, BoostService::class.java).setAction(ACTION_START)
+            if (playerSession != null && playerSession > 0) intent.putExtra(EXTRA_PLAYER_SESSION, playerSession)
+            context.startForegroundService(intent)
         }
 
         fun togglePause(context: Context) {

@@ -8,6 +8,7 @@ import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,6 +31,8 @@ class MainActivity : Activity() {
     private lateinit var pauseButton: Button
     private val handler = Handler(Looper.getMainLooper())
     private var rendering = false
+    private var playerSession: Int? = null
+    private var playerSessionPending = false
     private val statusObserver: (BoostState) -> Unit = { renderStatus(it) }
     private val applyGain = Runnable { BoostService.applySettingsToRunningService() }
 
@@ -42,6 +45,7 @@ class MainActivity : Activity() {
         globalSwitch = findViewById(R.id.global_switch)
         gainSlider = findViewById(R.id.gain_slider)
         pauseButton = findViewById(R.id.pause_button)
+        readPlayerSession(intent)
         gainSlider.max = Gain.MAX_MB / Gain.STEP_MB
         gainSlider.progress = prefs.gainMb / Gain.STEP_MB
         renderGain(prefs.gainMb)
@@ -96,6 +100,20 @@ class MainActivity : Activity() {
                 BoostRuntime.publish(BoostState(startFailed = true))
             }
         }
+        findViewById<Button>(R.id.four_times_button).setOnClickListener {
+            prefs.gainMb = Gain.FOUR_TIMES_MB
+            gainSlider.progress = prefs.gainMb / Gain.STEP_MB
+            renderGain(prefs.gainMb)
+            handler.removeCallbacks(applyGain)
+            BoostService.applySettingsToRunningService()
+        }
+        findViewById<Button>(R.id.player_mode_button).setOnClickListener {
+            if (playerSession == null) return@setOnClickListener
+            prefs.useGlobal = false
+            prefs.enabled = true
+            prefs.paused = false
+            if (requestStart()) requestSetupPermissions()
+        }
         findViewById<Button>(R.id.battery_button).setOnClickListener { openBatterySettings() }
         findViewById<Button>(R.id.notification_button).setOnClickListener {
             startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, packageName))
@@ -111,7 +129,29 @@ class MainActivity : Activity() {
         super.onResume()
         renderPermissions()
         // Recover from a killed process while the activity is visible and starts are allowed.
-        if (prefs.enabled && !BoostRuntime.state.running) requestStart()
+        if (prefs.enabled && (!BoostRuntime.state.running || playerSessionPending)) requestStart()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        readPlayerSession(intent)
+    }
+
+    private fun readPlayerSession(intent: Intent?) {
+        // An external panel request is only a hint: opening this screen never
+        // enables boost or changes the user's global-mode setting by itself.
+        val panelRequested = intent?.action == AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL
+        playerSession = try {
+            if (panelRequested) {
+                intent?.getIntExtra(AudioEffect.EXTRA_AUDIO_SESSION, -1)?.takeIf { it > 0 }
+            } else null
+        } catch (_: RuntimeException) { null }
+        playerSessionPending = playerSession != null
+        findViewById<View>(R.id.player_session_card).visibility =
+            if (playerSession == null) View.GONE else View.VISIBLE
+        findViewById<View>(R.id.player_session_error).visibility =
+            if (panelRequested && playerSession == null) View.VISIBLE else View.GONE
     }
 
     override fun onStop() {
@@ -122,7 +162,8 @@ class MainActivity : Activity() {
     }
 
     private fun requestStart(): Boolean = try {
-        BoostService.start(this)
+        BoostService.start(this, playerSession)
+        playerSessionPending = false
         true
     } catch (_: RuntimeException) {
         prefs.enabled = false

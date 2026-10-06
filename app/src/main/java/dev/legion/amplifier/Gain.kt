@@ -4,6 +4,7 @@ import kotlin.math.pow
 
 object Gain {
     const val DEFAULT_MB = 600
+    const val FOUR_TIMES_MB = 1200
     const val MAX_MB = 1500
     const val STEP_MB = 50
 

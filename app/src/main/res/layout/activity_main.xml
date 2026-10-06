@@ -27,6 +27,15 @@
             android:textSize="34sp"
             android:textStyle="bold" />
         <TextView style="@style/BodyText" android:text="@string/app_subtitle" />
+        <TextView android:id="@+id/player_session_error" style="@style/BodyText"
+            android:layout_marginTop="16dp" android:visibility="gone"
+            android:text="@string/player_session_missing" android:accessibilityLiveRegion="polite" />
+
+        <LinearLayout android:id="@+id/player_session_card" style="@style/Card" android:visibility="gone">
+            <TextView style="@style/CardTitle" android:text="@string/player_session_title" />
+            <TextView style="@style/BodyText" android:text="@string/player_session_help" />
+            <Button android:id="@+id/player_mode_button" style="@style/ActionButton" android:text="@string/player_mode_button" />
+        </LinearLayout>
 
         <LinearLayout style="@style/Card">
             <Switch
@@ -86,6 +95,7 @@
                     android:textColor="@color/text_secondary" android:textSize="12sp" />
             </FrameLayout>
             <TextView style="@style/BodyText" android:text="@string/gain_help" />
+            <Button android:id="@+id/four_times_button" style="@style/ActionButton" android:text="@string/gain_four_times" />
         </LinearLayout>
 
         <LinearLayout style="@style/Card">
@@ -112,6 +122,8 @@
         <LinearLayout style="@style/Card" android:layout_marginBottom="12dp">
             <TextView style="@style/CardTitle" android:text="@string/youtube_tip" />
             <TextView style="@style/BodyText" android:layout_marginTop="8dp" android:text="@string/youtube_help" />
+            <TextView style="@style/CardTitle" android:layout_marginTop="16dp" android:text="@string/youtube_music_title" />
+            <TextView style="@style/BodyText" android:layout_marginTop="8dp" android:text="@string/youtube_music_help" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

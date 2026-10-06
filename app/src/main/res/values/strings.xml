@@ -11,12 +11,13 @@
     <string name="gain_zero">0 dB</string>
     <string name="gain_double">+6 dB\n≈2×</string>
     <string name="gain_max">+15 dB</string>
+    <string name="gain_four_times">≈4× amplitude (+12 dB)</string>
     <string name="gain_help">Start at +6 dB. Reduce the boost if loud audio becomes distorted. The limiter may reduce the actual gain.</string>
     <string name="status_off">Boost is off</string>
     <string name="status_starting">Starting boost…</string>
     <string name="status_paused">Boost paused. Resume to hear the difference.</string>
     <string name="status_global_active">Global effect is active. Check the sound in your player.</string>
-    <string name="status_sessions_active">Boosting announced app sessions</string>
+    <string name="status_sessions_active">Boosting connected app sessions</string>
     <string name="status_waiting">Waiting for a supported player. Restart playback to announce a session.</string>
     <string name="status_start_failed">Android prevented startup. Enable boost again from this screen.</string>
     <string name="global_switch">Use global mix</string>
@@ -28,11 +29,15 @@
     <string name="global_paused">paused</string>
     <string name="global_conflict">another app has control</string>
     <string name="global_unavailable">unavailable on this audio route</string>
-    <string name="session_status">App sessions · boosted: %1$d · announced: %2$d</string>
-    <string name="session_help">Session count stays at zero for players that do not announce sessions. Global mix can still boost their audio.</string>
+    <string name="session_status">App sessions · boosted: %1$d · connected: %2$d</string>
+    <string name="session_help">Connect through a player’s Equalizer menu or session announcements. Without either, only a working global mix can boost that player.</string>
+    <string name="player_session_title">Player session received</string>
+    <string name="player_session_missing">Your player opened Equalizer without a usable audio session. Restart playback and reopen Equalizer. If no session is supplied, only a working global mix can boost this player.</string>
+    <string name="player_session_help">Your player supplied an audio session. Use player mode to enable boost on that session and turn off global mix. Other players need their own session connection in this mode.</string>
+    <string name="player_mode_button">Use player mode</string>
     <plurals name="failed_sessions">
-        <item quantity="one">%1$d announced session could not be configured.</item>
-        <item quantity="other">%1$d announced sessions could not be configured.</item>
+        <item quantity="one">%1$d connected session could not be configured.</item>
+        <item quantity="other">%1$d connected sessions could not be configured.</item>
     </plurals>
     <string name="effect_conflict">Another effect app has control. Try disabling other equalizers.</string>
     <string name="session_limit">Session limit reached. Restart Amplifier to clear stale sessions.</string>
@@ -52,6 +57,8 @@
     <string name="notification_button">Notification settings</string>
     <string name="youtube_tip">YouTube tip</string>
     <string name="youtube_help">In the video settings, try turning off “Stable volume”. Reels are often mastered louder than streaming videos.</string>
+    <string name="youtube_music_title">YouTube Music connection</string>
+    <string name="youtube_music_help">If the sound stays unchanged, open Equalizer in YouTube Music’s settings, if available, and choose Amplifier. Tap “Use player mode” here. An attached global effect does not prove audible gain. Casting and some Bluetooth or offloaded routes may bypass effects.</string>
     <string name="channel_name">Audio boost</string>
     <string name="channel_description">Current boost and background audio controls</string>
     <string name="notification_active">+%1$.1f dB · %2$s</string>

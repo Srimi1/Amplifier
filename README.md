@@ -6,11 +6,11 @@ A small native Kotlin background volume booster for Android 8.0+ (API 26), targe
 
 An [iPhone version built with Xcode](ios/README.md) is also included for iOS 26+, including iPhone 17. **Its gain applies only to imported media played inside Amplifier.** iOS does not allow this app to amplify YouTube, Chrome, or other apps. The Android APK cannot run on an iPhone; the iOS project has separate builds and Apple signing requirements.
 
-The default boost is **+6 dB**, approximately **2× signal amplitude**, with a slider from 0 to +15 dB in 0.5 dB steps. This does not mean twice the perceived loudness. Android’s `LoudnessEnhancer` compresses signals that would exceed the supported sample range, so the actual increase depends on the content.
+The default boost is **+6 dB**, approximately **2× signal amplitude**, with a slider from 0 to +15 dB in 0.5 dB steps. The **≈4× amplitude (+12 dB)** button selects approximately four times the input signal amplitude. Neither setting multiplies the speaker’s physical capacity or guarantees that increase in perceived loudness. Android’s `LoudnessEnhancer` compresses signals that would exceed the supported sample range, so the actual increase depends on the content.
 
 ## Install without Android Studio
 
-For the published app, open [GitHub Releases](https://github.com/Srimi1/Amplifier/releases/latest), download `amplifier-1.0.0.apk` from **Assets**, and open it on your phone. Allow installation from that browser/file manager when Android asks. Release APKs are signed with the app’s private release key and have debugging disabled.
+For the published app, open [GitHub Releases](https://github.com/Srimi1/Amplifier/releases/latest), download `amplifier-1.0.1.apk` from **Assets**, and open it on your phone. Allow installation from that browser/file manager when Android asks. Release APKs are signed with the app’s private release key and have debugging disabled. Version 1.0.1 uses the same release key and app ID as 1.0.0, so it installs as an update.
 
 For a development build:
 
@@ -34,6 +34,7 @@ In YouTube’s video settings, try turning off **Stable volume**, when available
 
 ## How attachment works
 
+- **Player Equalizer menu:** Amplifier handles Android’s `ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL`. When a player supplies its current positive session ID, Amplifier can attach directly without waiting for an open-session broadcast. Opening the panel does not automatically enable boost or change global mode. **Use player mode** explicitly enables boost, resumes it, and disables global mix to avoid stacking gain. Availability depends on the player and its equalizer intent.
 - **Global mix (session 0):** a `LoudnessEnhancer` attempts to attach to the output mix. This is deprecated by Android and ROM dependent. When usable, it can cover Chrome and other players that do not announce sessions. It may also affect other audio routed through the same mix.
 - **Announced app sessions:** exported runtime and manifest receivers handle `AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION` and `ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION`. The manifest receiver lets players discover Amplifier before sending targeted broadcasts. It forwards only to an already running service; broadcasts never enable or start the service. Voice sessions are excluded from this path.
 - **One gain stage:** both attachment strategies are maintained, but per-session processing stays disabled while the global effect is controllable and enabled. If the global effect is unavailable or loses control, announced sessions become the fallback. Gain is never intentionally stacked twice. Turn off **Use global mix** to test session mode directly.
@@ -41,7 +42,16 @@ In YouTube’s video settings, try turning off **Stable volume**, when available
 
 Using **ExoPlayer/Media3 does not by itself guarantee session broadcasts**. The player app must opt in. YouTube and Crunchyroll coverage depends on their version and playback path; Amplifier cannot force them to announce IDs or enumerate arbitrary existing sessions. Enable Amplifier before starting playback, or fully stop and reopen a player to obtain a new session announcement.
 
-The status screen shows whether the global effect is attached and enabled, and how many announced sessions are actively boosted. With global mode active, **0 per-app sessions boosted is normal**: those effects remain fallback attachments. These counts describe Android effect state, not measured loudness or proof that the audio route actually processes the effect.
+The status screen shows whether the global effect is attached and enabled, and how many connected sessions are actively boosted. Connections may arrive from broadcasts or a player’s Equalizer menu. With global mode active, **0 per-app sessions boosted is normal**: those effects remain fallback attachments. These counts describe Android effect state, not measured loudness or proof that the audio route actually processes the effect.
+
+## YouTube Music: no audible boost
+
+1. Install 1.0.1 and disable other equalizers while comparing. Start with +6 dB and a moderate system volume.
+2. Play a track locally on the phone. In YouTube Music’s settings, open **Equalizer**, if your version/device provides it. Choose **Amplifier** if Android offers a choice. If another equalizer is the default, clear that app’s defaults in Android settings before retrying.
+3. When Amplifier shows **Player session received**, tap **Use player mode**. This disables global mix and connects the supplied session. Compare **Pause boost / Resume boost** during the same passage; check that the boosted-session count is greater than zero.
+4. Try the phone speaker before Bluetooth/USB, and repeat the connection after restarting the player or changing routes; session IDs can change. Then try the **≈4× amplitude (+12 dB)** preset if +6 dB is insufficient. Reduce it if the sound distorts.
+
+An “attached and enabled” global effect may have no audible effect on a ROM or playback route. If there is no Equalizer handoff, no session announcement, and no working global mix, this no-root app cannot reach YouTube Music’s audio. Cast playback is processed on the receiving device, and some offloaded/protected paths bypass these effects. Raising the gain cannot repair a missing connection. This integration needs confirmation on your phone; no YouTube Music device is attached to the build environment.
 
 ## Limitations and troubleshooting
 
