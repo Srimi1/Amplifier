@@ -62,6 +62,7 @@ android {
         warningsAsErrors = true
         // Tool versions are pinned; online update notices must not break repeatable builds.
         disable += "AndroidGradlePluginVersion"
+        disable += "GradleDependency"
         // Android 16 / API 36 is the intended release target, even after newer SDKs ship.
         disable += "OldTargetApi"
     }
@@ -74,5 +75,6 @@ kotlin {
 }
 
 dependencies {
+    implementation("androidx.annotation:annotation:1.9.1")
     testImplementation("junit:junit:4.13.2")
 }

@@ -1,15 +1,15 @@
 package dev.legion.amplifier
 
-import android.annotation.TargetApi
 import android.media.audiofx.AudioEffect
 import android.media.audiofx.DynamicsProcessing
+import androidx.annotation.RequiresApi
 
 /**
  * Gain stage built on DynamicsProcessing: input gain followed by a brick-wall limiter.
  * Unlike LoudnessEnhancer it accepts an effect priority, so Amplifier keeps control of the
  * output mix on Android 17 builds where system or vendor effects claim it first.
  */
-@TargetApi(28)
+@RequiresApi(28)
 internal class DynamicsBoostEffect(session: Int, onControlChanged: () -> Unit) : BoostEffect {
     private val processor = DynamicsProcessing(PRIORITY, session, config())
     private var appliedMb = Int.MIN_VALUE
