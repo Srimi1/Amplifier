@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
+    <!-- LineageOS-based ROMs such as crDroid ship AudioFX, which competes for the same effects. -->
+    <queries>
+        <package android:name="org.lineageos.audiofx" />
+    </queries>
+
     <application
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
