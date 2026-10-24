@@ -8,6 +8,7 @@ import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Build
@@ -212,12 +213,19 @@ class MainActivity : Activity() {
             ))
             if (state.engine.controlConflicts > 0) add(getString(R.string.effect_conflict))
             if (state.engine.sessionLimitReached) add(getString(R.string.session_limit))
+            if (state.running && spatialAudioOn()) add(getString(R.string.spatial_audio_on))
         }
         findViewById<TextView>(R.id.effect_issues).apply {
             text = issues.joinToString("\n")
             visibility = if (issues.isEmpty()) View.GONE else View.VISIBLE
         }
     }
+
+    // Spatial audio routes playback through the spatializer, which can bypass
+    // session and output-mix effects on Android 17 phones.
+    private fun spatialAudioOn(): Boolean = Build.VERSION.SDK_INT >= 32 && try {
+        getSystemService(AudioManager::class.java).spatializer.let { it.isAvailable && it.isEnabled }
+    } catch (_: RuntimeException) { false }
 
     private fun requestSetupPermissions() {
         if (Build.VERSION.SDK_INT >= 33 &&

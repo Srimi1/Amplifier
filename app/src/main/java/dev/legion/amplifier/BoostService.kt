@@ -35,13 +35,7 @@ class BoostService : Service() {
     override fun onCreate() {
         super.onCreate()
         prefs = Prefs(this)
-        engine = BoostEngine { session ->
-            AndroidBoostEffect(session) {
-                handler.post {
-                    if (!destroyed && foreground && prefs.enabled) updateStatus(engine.refresh())
-                }
-            }
-        }
+        engine = BoostEngine(::createEffect)
         val channel = NotificationChannel(
             CHANNEL_ID, getString(R.string.channel_name), NotificationManager.IMPORTANCE_LOW,
         ).apply {
@@ -106,6 +100,26 @@ class BoostService : Service() {
         val playerSession = intent?.getIntExtra(EXTRA_PLAYER_SESSION, -1) ?: -1
         if (playerSession > 0) updateStatus(engine.openSession(playerSession))
         return START_STICKY
+    }
+
+    private fun createEffect(session: Int): BoostEffect {
+        val onControlChanged = {
+            handler.post {
+                if (!destroyed && foreground && prefs.enabled) updateStatus(engine.refresh())
+            }
+            Unit
+        }
+        // Android 17 devices often hand the output mix to a higher-priority system or
+        // vendor effect, leaving LoudnessEnhancer attached but silent. DynamicsProcessing
+        // takes a priority, so prefer it and keep LoudnessEnhancer as the fallback.
+        if (Build.VERSION.SDK_INT >= 28) {
+            try {
+                return DynamicsBoostEffect(session, onControlChanged)
+            } catch (error: RuntimeException) {
+                Log.w(TAG, "DynamicsProcessing unavailable for session $session", error)
+            }
+        }
+        return AndroidBoostEffect(session, onControlChanged)
     }
 
     private fun applySettings() {
