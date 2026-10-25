@@ -40,6 +40,8 @@
         <item quantity="other">%1$d connected sessions could not be configured.</item>
     </plurals>
     <string name="effect_conflict">Another effect app has control. Try disabling other equalizers.</string>
+    <string name="spatial_audio_on">Spatial audio is on. It can bypass Amplifier on Android 17. Turn it off in Settings › Sound &amp; vibration › Spatial audio.</string>
+    <string name="audiofx_on">AudioFX is enabled. On crDroid and other LineageOS builds it competes with Amplifier. Turn off its effects, or disable AudioFX in Settings › Apps.</string>
     <string name="session_limit">Session limit reached. Restart Amplifier to clear stale sessions.</string>
     <string name="pause_boost">Pause boost</string>
     <string name="resume_boost">Resume boost</string>

@@ -8,6 +8,16 @@ An [iPhone version built with Xcode](ios/README.md) is also included for iOS 26+
 
 The default boost is **+6 dB**, approximately **2× signal amplitude**, with a slider from 0 to +15 dB in 0.5 dB steps. The **≈4× amplitude (+12 dB)** button selects approximately four times the input signal amplitude. Neither setting multiplies the speaker’s physical capacity or guarantees that increase in perceived loudness. Android’s `LoudnessEnhancer` compresses signals that would exceed the supported sample range, so the actual increase depends on the content.
 
+## Android 17
+
+Version 2.0.0 reworks the audio engine for Android 17 phones, where 1.x often showed the global mix as attached but made no audible difference.
+
+- **New gain stage.** Amplifier now uses `DynamicsProcessing` (input gain into a limiter at -1 dBFS) at the highest effect priority. `LoudnessEnhancer` cannot set a priority, so a system, vendor, or other equalizer effect on the same output mix could take control first. Devices without `DynamicsProcessing` support fall back to `LoudnessEnhancer` automatically.
+- **Spatial audio warning.** On some Android 17 phones (reported on Pixels), Spatial audio routes playback past session and output-mix effects. The status card warns when it is on. Turn it off under **Settings › Sound & vibration › Spatial audio** while testing.
+- **Background audio hardening.** Android 17 restricts background playback, focus, and volume calls. Amplifier makes none of those calls, and its foreground service is a non-short type, which is what Android 17 requires for apps targeting API 36. No permission change is needed.
+- **crDroid and other LineageOS builds.** These ROMs ship AudioFX (`org.lineageos.audiofx`), which attaches its own effects to player sessions and the output mix. Amplifier's higher priority should take control, but for a clean comparison turn AudioFX's effects off, or disable AudioFX under **Settings › Apps**. The status card warns while AudioFX is enabled. Also check for other bundled effects on your device build, such as Dolby or Dirac.
+- **Bluetooth codecs.** Users of other effect apps report that LDAC and aptX routes can bypass effects on Android 17. Compare on the phone speaker or an AAC/SBC connection first.
+
 ## Install without Android Studio
 
 For the published app, open [GitHub Releases](https://github.com/Srimi1/Amplifier/releases/latest), download `amplifier-1.0.1.apk` from **Assets**, and open it on your phone. Allow installation from that browser/file manager when Android asks. Release APKs are signed with the app’s private release key and have debugging disabled. Version 1.0.1 uses the same release key and app ID as 1.0.0, so it installs as an update.

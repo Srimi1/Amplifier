@@ -8,6 +8,7 @@ import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Build
@@ -212,12 +213,32 @@ class MainActivity : Activity() {
             ))
             if (state.engine.controlConflicts > 0) add(getString(R.string.effect_conflict))
             if (state.engine.sessionLimitReached) add(getString(R.string.session_limit))
+            if (state.running && spatialAudioOn()) add(getString(R.string.spatial_audio_on))
+            if (state.running && audioFxEnabled()) add(getString(R.string.audiofx_on))
         }
         findViewById<TextView>(R.id.effect_issues).apply {
             text = issues.joinToString("\n")
             visibility = if (issues.isEmpty()) View.GONE else View.VISIBLE
         }
     }
+
+    // Spatial audio routes playback through the spatializer, which can bypass
+    // session and output-mix effects on Android 17 phones.
+    private fun spatialAudioOn(): Boolean = Build.VERSION.SDK_INT >= 32 && try {
+        getSystemService(AudioManager::class.java).spatializer.let { it.isAvailable && it.isEnabled }
+    } catch (_: RuntimeException) { false }
+
+    // crDroid and other LineageOS builds include AudioFX, which attaches its own
+    // effects to the same sessions and output mix.
+    private fun audioFxEnabled(): Boolean = try {
+        val info = if (Build.VERSION.SDK_INT >= 33) {
+            packageManager.getApplicationInfo(AUDIOFX_PACKAGE, PackageManager.ApplicationInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.getApplicationInfo(AUDIOFX_PACKAGE, 0)
+        }
+        info.enabled
+    } catch (_: PackageManager.NameNotFoundException) { false }
 
     private fun requestSetupPermissions() {
         if (Build.VERSION.SDK_INT >= 33 &&
@@ -293,5 +314,6 @@ class MainActivity : Activity() {
 
     companion object {
         private const val NOTIFICATION_PERMISSION = 1
+        private const val AUDIOFX_PACKAGE = "org.lineageos.audiofx"
     }
 }
