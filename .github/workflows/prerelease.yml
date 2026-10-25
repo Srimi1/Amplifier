@@ -1,0 +1,53 @@
+name: Publish debug pre-release
+
+on:
+  push:
+    branches:
+      - claude/android-17-amplifier
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prerelease-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prerelease:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
+      - name: Install Android 16 build packages
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Set up Gradle and validate wrapper
+        uses: gradle/actions/setup-gradle@v4
+      - name: Build debug APK
+        run: |
+          ./gradlew --no-daemon assembleDebug
+          cp app/build/outputs/apk/debug/app-debug.apk amplifier-2.0.0-debug.apk
+      - name: Publish pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.0.0-debug.${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          name: Amplifier 2.0.0 debug build ${{ github.run_number }} (Android 17 / crDroid test)
+          prerelease: true
+          files: amplifier-2.0.0-debug.apk
+          body: |
+            Test build of the Android 17 rework from branch `${{ github.ref_name }}` (commit ${{ github.sha }}).
+
+            - Download `amplifier-2.0.0-debug.apk` below and open it on the phone.
+            - Signed with the public development key, app ID `dev.legion.amplifier.debug`. It installs next to the release app; disable the other one while testing.
+            - On crDroid, turn off AudioFX effects and Spatial audio first, then compare Pause boost and Resume boost on the phone speaker.
